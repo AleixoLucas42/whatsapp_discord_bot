@@ -6,6 +6,8 @@ services:
     # restart: always
     ports:
       - "3000:3000"
+    networks:
+      - whatsapp-net
     environment:
       # - API_KEY=your_global_api_key_here  # OPTIONAL
       - BASE_WEBHOOK_URL=http://localhost:3000/localCallbackExample
@@ -23,5 +25,10 @@ services:
     environment:
       - DISC_TOKEN=
       - CHAT_ID=
+    networks:
+      - whatsapp-net
     depends_on:
         - whatsapp
+networks:
+  whatsapp-net:
+    external: true
