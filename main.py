@@ -3,10 +3,13 @@ import discord
 from discord.ext import commands
 import requests
 import json
+import time
 
 wpp_url = "http://whatsapp:3000/client/sendMessage/DISC_WPP_SESSION"
 chat_id = os.environ["CHAT_ID"]
 token = os.environ["DISC_TOKEN"]
+
+last_notification_time = {}
 
 def send_wpp_notification(content):
     payload = json.dumps({
@@ -21,9 +24,9 @@ def send_wpp_notification(content):
     response = requests.request("POST", wpp_url, headers=headers, data=payload)
 
     if response.status_code == 200:
-        print("Enviado notificação no whatsapp")
+        print("> whatsapp message sent")
     else:
-        print(f"Erro {response.status_code} ao enviar a notificação\n")
+        print(f"Error {response.status_code} sending message\n")
         print(response.text)
 
 intents = discord.Intents.all()
@@ -41,7 +44,10 @@ async def on_voice_state_update(member, before, after):
         if after.channel is not None:
             channel_name = after.channel.name
             guild_name = after.channel.guild.name
-            print(f"Usuário {member.name} se conectou ao canal de voz {channel_name}")
-            send_wpp_notification(f"Usuário {member.name} se conectou ao canal de voz {channel_name}")
+            print(f"> {member.name} connected to voice channel {channel_name}")
+
+            if member.id not in last_notification_time or time.time() - last_notification_time[member.id] > 30:
+                send_wpp_notification(f"{member.name} on: {channel_name}")
+                last_notification_time[member.id] = time.time()
 
 bot.run(token)
