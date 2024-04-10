@@ -11,7 +11,6 @@ token = os.environ["DISC_TOKEN"]
 last_notification_time = {}
 
 def send_wpp_notification(content):
-    return True
     payload = json.dumps({
         "chatId": chat_id,
         "contentType": "string",
