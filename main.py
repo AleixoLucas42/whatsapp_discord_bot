@@ -52,10 +52,4 @@ async def on_voice_state_update(member, before, after):
                 last_notification_time[member.id] = time.time()
 
 if __name__ == '__main__':
-    while (bot_status_working is not True):
-        time.sleep(10)
-        print("[*] trying to wake up bot")
-        if (send_wpp_notification("✅ bot is awake")):
-            bot_status_working = True
-    print("[*] bot waked up")
     bot.run(token)
