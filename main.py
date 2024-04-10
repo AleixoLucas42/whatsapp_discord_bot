@@ -8,10 +8,10 @@ import time
 wpp_url = "http://whatsapp:3000/client/sendMessage/DISC_WPP_SESSION"
 chat_id = os.environ["CHAT_ID"]
 token = os.environ["DISC_TOKEN"]
-bot_status_working = False
 last_notification_time = {}
 
 def send_wpp_notification(content):
+    return True
     payload = json.dumps({
         "chatId": chat_id,
         "contentType": "string",
@@ -36,10 +36,10 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 @bot.event
 async def on_ready():
-    global bot_status_working
+    bot_status_working = False
     print(f'[*] bot connected as {bot.user.name}')
     while (bot_status_working is not True):
-        time.sleep(30)
+        time.sleep(10)
         print("[*] trying to wake up bot")
         if (send_wpp_notification("✅ bot is awake")):
             bot_status_working = True
